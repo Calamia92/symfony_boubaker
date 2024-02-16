@@ -15,8 +15,8 @@
     <tbody>
         {% for categorie in categories|slice((categories|length > 3 ? categories|length - 3 : 0), 3) %}
             <tr>
-                <td>{{ categorie.id }}</td>
-                <td>{{ categorie.title }}</td>
+                <td><a href="{{ path('app_categorie_show', {'id': categorie.id}) }}">{{ categorie.id }}</a></td>
+                <td><a href="{{ path('app_categorie_show', {'id': categorie.id}) }}">{{ categorie.title }}</a></td>
                 <td>
                   
                 </td>

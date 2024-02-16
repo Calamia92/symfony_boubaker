@@ -16,8 +16,8 @@
         <tbody>
         {% for categorie in categories %}
             <tr>
-                <td>{{ categorie.id }}</td>
-                <td>{{ categorie.title }}</td>
+                <td><a href="{{ path('app_categorie_show', {'id': categorie.id}) }}">{{ categorie.id }}</a></td>
+                <td><a href="{{ path('app_categorie_show', {'id': categorie.id}) }}">{{ categorie.title }}</a></td>
                 <td>
                     <a href="{{ path('app_categorie_show', {'id': categorie.id}) }}">show</a>
                     <a href="{{ path('app_categorie_edit', {'id': categorie.id}) }}">edit</a>

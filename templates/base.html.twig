@@ -23,6 +23,12 @@
 		{% endblock %}
 	</head>
 	<body>
+	 {% if app.user %}
+	 </br>
+        <div class="mb-3">
+            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+        </div>
+    {% endif %}
 		{% block body %}{% endblock %}
 	</body>
 </html>
