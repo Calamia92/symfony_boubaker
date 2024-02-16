@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+<h1>Top 3</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Title</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for categorie in categories|slice((categories|length > 3 ? categories|length - 3 : 0), 3) %}
+            <tr>
+                <td>{{ categorie.id }}</td>
+                <td>{{ categorie.title }}</td>
+                <td>
+                  
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">No categories found</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
