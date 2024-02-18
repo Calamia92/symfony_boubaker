@@ -26,29 +26,33 @@ class ArticleController extends AbstractController
     }
 
     #[Route('/new', name: 'app_article_new', methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_ADMIN')]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $article = new Article();
-        $form = $this->createForm(ArticleType::class, $article);
-        $form->handleRequest($request);
+#[IsGranted('ROLE_ADMIN')]
+public function new(Request $request, EntityManagerInterface $entityManager): Response
+{
+    $article = new Article();
+    $form = $this->createForm(ArticleType::class, $article);
+    $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($article->isState()) {
-                $article->setPublishedAt(new \DateTimeImmutable());
-            }
-
-            $entityManager->persist($article);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
+    if ($form->isSubmitted() && $form->isValid()) {
+        if ($article->isState()) {
+            $article->setPublishedAt(new \DateTimeImmutable());
         }
 
-        return $this->render('article/new.html.twig', [
-            'article' => $article,
-            'form' => $form,
-        ]);
+        $user = $this->getUser();
+        $article->setAuthor($user);
+
+        $entityManager->persist($article);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    return $this->render('article/new.html.twig', [
+        'article' => $article,
+        'form' => $form,
+    ]);
+}
+
 
 
 
@@ -84,6 +88,9 @@ class ArticleController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($article->isState() === true && $article->getPublishedAt() === null) {
+                $article->setPublishedAt(new \DateTimeImmutable());
+            }
             $entityManager->flush();
 
             return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);

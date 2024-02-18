@@ -18,10 +18,6 @@ class ArticleType extends AbstractType
             ->add('title')
             ->add('content')
             ->add('state')
-            ->add('author', EntityType::class, [
-                'class' => User::class,
-'choice_label' => 'email',
-            ])
             ->add('categorie', EntityType::class, [
                 'class' => Categorie::class,
 'choice_label' => 'title',

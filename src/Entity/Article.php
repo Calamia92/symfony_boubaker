@@ -150,7 +150,16 @@ public function publish(): void
         $this->published_at = new \DateTimeImmutable(); 
     }
 }
-
+#[ORM\PrePersist]
+#[ORM\PreUpdate]
+public function updatePublishedAt(): void
+{
+    if ($this->isState()) {
+        $this->published_at = new \DateTimeImmutable();
+    } else {
+        $this->published_at = null;
+    }
+}
     /**
      * @return Collection<int, Comments>
      */
