@@ -45,20 +45,24 @@ class CommentsController extends AbstractController
         return $this->redirectToRoute('app_article_show', ['id' => $comment->getArticle()->getId()]);
     }
     #[Route('/comment/{id}/edit', name: 'comment_edit', methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_ADMIN')]
-    public function edit(Request $request, Comments $comment, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(CommentsType::class, $comment);
-        $form->handleRequest($request);
+#[IsGranted('ROLE_ADMIN')]
+public function edit(Request $request, Comments $comment, EntityManagerInterface $entityManager): Response
+{
+    $form = $this->createForm(CommentsType::class, $comment, [
+        'is_admin' => true,
+    ]);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-            return $this->redirectToRoute('app_article_show', ['id' => $comment->getArticle()->getId()]);
-        }
+    $form->handleRequest($request);
 
-        return $this->render('comments/edit.html.twig', [
-            'comment' => $comment,
-            'form' => $form->createView(),
-        ]);
+    if ($form->isSubmitted() && $form->isValid()) {
+        $entityManager->flush();
+        return $this->redirectToRoute('app_article_show', ['id' => $comment->getArticle()->getId()]);
     }
+
+    return $this->render('comments/edit.html.twig', [
+        'comment' => $comment,
+        'form' => $form->createView(),
+    ]);
+}
+
 }
