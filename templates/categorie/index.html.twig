@@ -1,35 +1,55 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Categorie index{% endblock %}
+{% block title %}Categorie index
+{% endblock %}
 
 {% block body %}
-    <h1>Categorie index</h1>
+	<h1>Categorie index</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for categorie in categories %}
-            <tr>
-                <td><a href="{{ path('app_categorie_show', {'id': categorie.id}) }}">{{ categorie.id }}</a></td>
-                <td><a href="{{ path('app_categorie_show', {'id': categorie.id}) }}">{{ categorie.title }}</a></td>
-                <td>
-                    <a href="{{ path('app_categorie_show', {'id': categorie.id}) }}">show</a>
-                    <a href="{{ path('app_categorie_edit', {'id': categorie.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="3">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_categorie_new') }}">Create new</a>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Title</th>
+				<th>Articles</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for categorie in categories %}
+				<tr>
+					<td>{{ categorie.id }}</td>
+					<td>{{ categorie.title }}</td>
+					<td>
+						<ul>
+							{% for article in categorie.articles %}
+								<a href="{{ path('app_article_show', {'id': article.id}) }}">
+									{{ article.title }}
+									({{ article.createdAt|date('Y-m-d') }})
+								</a>
+                                <br/>
+							{% else %}
+								<li>No articles found for this category.</li>
+							{% endfor %}
+						</ul>
+					</td>
+					<td>
+						<a href="{{ path('app_categorie_show', {'id': categorie.id}) }}" class="btn btn-primary">show</a>
+						<a href="{{ path('app_categorie_edit', {'id': categorie.id}) }}" class="btn btn-secondary">edit</a>
+						<form method="post" action="{{ path('app_categorie_delete', {'id': categorie.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');" style="display: inline-block;">
+							<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ categorie.id) }}">
+							<button class="btn btn-danger">delete</button>
+						</form>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="4">no records found</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% if is_granted("ROLE_ADMIN") %}
+	<a href="{{ path('app_categorie_new') }}" class="btn btn-success">Create new</a>
+    {% endif %}
 {% endblock %}

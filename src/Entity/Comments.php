@@ -16,10 +16,10 @@ class Comments
     #[ORM\Column(length: 255)]
     private ?string $content = null;
 
-    #[ORM\Column]
+    #[ORM\Column (nullable: true)]
     private ?\DateTimeImmutable $created_at = null;
 
-    #[ORM\Column]
+    #[ORM\Column (nullable: true)]
     private ?bool $is_show = null;
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
@@ -52,6 +52,13 @@ class Comments
         return $this->created_at;
     }
 
+    #[ORM\PrePersist]
+    public function prePersist(): void
+    {
+        if ($this->created_at === null) {
+            $this->created_at = new \DateTimeImmutable();
+        }
+    }
     public function setCreatedAt(\DateTimeImmutable $created_at): static
     {
         $this->created_at = $created_at;

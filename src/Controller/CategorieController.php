@@ -36,7 +36,7 @@ class CategorieController extends AbstractController
             $entityManager->persist($categorie);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_accueil', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_categorie_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('categorie/new.html.twig', [
@@ -54,6 +54,8 @@ class CategorieController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_categorie_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
+
     public function edit(Request $request, Categorie $categorie, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(CategorieType::class, $categorie);
@@ -72,6 +74,8 @@ class CategorieController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_categorie_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
+
     public function delete(Request $request, Categorie $categorie, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$categorie->getId(), $request->request->get('_token'))) {

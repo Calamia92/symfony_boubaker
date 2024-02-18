@@ -1,42 +1,24 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Article{% endblock %}
+{% block title %}{{ article.title }}{% endblock %}
 
 {% block body %}
-    <h1>Article</h1>
+<h1>{{ article.title }}</h1>
+<p>{{ article.content }}</p>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ article.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ article.title }}</td>
-            </tr>
-            <tr>
-                <th>Content</th>
-                <td>{{ article.content }}</td>
-            </tr>
-            <tr>
-                <th>Created_at</th>
-                <td>{{ article.createdAt ? article.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>State</th>
-                <td>{{ article.state ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>Published_at</th>
-                <td>{{ article.publishedAt ? article.publishedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
+{{ form_start(commentForm, {'action': path('article_comment', {'id': article.id})}) }}
+    {{ form_widget(commentForm) }}
+    <button type="submit" class="btn btn-primary">Submit Comment</button>
+{{ form_end(commentForm) }}
 
-    <a href="{{ path('app_article_index') }}">back to list</a>
-
-    <a href="{{ path('app_article_edit', {'id': article.id}) }}">edit</a>
-
-    {{ include('article/_delete_form.html.twig') }}
+<h2>Comments</h2>
+{% for comment in article.comments %}
+    <div>
+        <p>{{ comment.author.email }} says:</p>
+        <p>{{ comment.content }}</p>
+        <p>Posted on {{ comment.createdAt|date('Y-m-d H:i:s') }}</p>
+    </div>
+{% else %}
+    <p>No comments yet.</p>
+{% endfor %}
 {% endblock %}
