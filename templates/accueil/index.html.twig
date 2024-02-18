@@ -1,32 +1,45 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Accueil{% endblock %}
+{% block title %}Accueil
+{% endblock %}
 
 {% block body %}
-<h1>Top 3</h1>
+	<h1>Top 3</h1>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Title</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for categorie in categories|slice((categories|length > 3 ? categories|length - 3 : 0), 3) %}
-            <tr>
-                <td><a href="{{ path('app_categorie_show', {'id': categorie.id}) }}">{{ categorie.id }}</a></td>
-                <td><a href="{{ path('app_categorie_show', {'id': categorie.id}) }}">{{ categorie.title }}</a></td>
-                <td>
-                  
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="3">No categories found</td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Title</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for categorie in categories|slice((categories|length > 3 ? categories|length - 3 : 0), 3) %}
+				<tr>
+					<td>
+						<a href="{{ path('app_categorie_show', {'id': categorie.id}) }}">{{ categorie.id }}</a>
+					</td>
+					<td>
+						<a href="{{ path('app_categorie_show', {'id': categorie.id}) }}">{{ categorie.title }}</a>
+					</td>
+					<td></td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="3">No categories found</td>
+				</tr>
+			{% endfor %}
 
+
+		</tbody>
+	</table>
+	{% if is_granted("ROLE_ADMIN") %}
+		
+			<a href="{{ path('app_categorie_new') }}">Ajouter une catégorie</a>
+		
+			<a href="{{ path('app_article_new') }}">Ajouter un article</a>
+		
+
+
+	{% endif %}
 {% endblock %}

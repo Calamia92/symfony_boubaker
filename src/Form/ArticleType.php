@@ -17,16 +17,14 @@ class ArticleType extends AbstractType
         $builder
             ->add('title')
             ->add('content')
-            ->add('created_at')
             ->add('state')
-            ->add('published_at')
             ->add('author', EntityType::class, [
                 'class' => User::class,
-'choice_label' => 'id',
+'choice_label' => 'email',
             ])
             ->add('categorie', EntityType::class, [
                 'class' => Categorie::class,
-'choice_label' => 'id',
+'choice_label' => 'title',
             ])
         ;
     }

@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\User;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 class Article
@@ -28,7 +29,7 @@ class Article
     #[ORM\Column]
     private ?bool $state = null;
 
-    #[ORM\Column]
+    #[ORM\Column (nullable:true)]
     private ?\DateTimeImmutable $published_at = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'articles')]
@@ -45,6 +46,7 @@ class Article
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->created_at = new \DateTimeImmutable(); 
     }
 
     public function getId(): ?int
@@ -81,12 +83,12 @@ class Article
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): static
-    {
-        $this->created_at = $created_at;
+    public function setCreatedAt(\DateTimeImmutable $created_at): self
+{
+    $this->created_at = $created_at;
+    return $this;
+}
 
-        return $this;
-    }
 
     public function isState(): ?bool
     {
@@ -105,7 +107,7 @@ class Article
         return $this->published_at;
     }
 
-    public function setPublishedAt(\DateTimeImmutable $published_at): static
+    public function setPublishedAt(?\DateTimeImmutable $published_at): static
     {
         $this->published_at = $published_at;
 
@@ -136,6 +138,18 @@ class Article
 
         return $this;
     }
+
+    public function onPrePersist(): void
+{
+    $this->created_at = new \DateTimeImmutable(); 
+}
+
+public function publish(): void
+{
+    if ($this->state) {
+        $this->published_at = new \DateTimeImmutable(); 
+    }
+}
 
     /**
      * @return Collection<int, Comments>
