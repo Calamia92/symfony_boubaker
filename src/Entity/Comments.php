@@ -20,7 +20,7 @@ class Comments
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\Column (nullable: true)]
-    private ?bool $is_show = null;
+    private ?bool $is_show = true;
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
@@ -71,7 +71,7 @@ class Comments
         return $this->is_show;
     }
 
-    public function setIsShow(bool $is_show): static
+    public function setIsShow(bool $is_show): self
     {
         $this->is_show = $is_show;
 
